@@ -10,7 +10,7 @@ This is a fork of [bubez81/matterbridge-ecovacs](https://github.com/bubez81/matt
 
 ---
 
-## What's new in v1.1.0
+## What's new in v1.1.1
 
 - **Cross-platform token cache** — auth token path now uses `os.homedir()` instead of `$HOME`, fixing broken token caching on Windows.
 - **Safe appVersion override** — the Ecovacs API version is now patched in-memory instead of rewriting the installed package file on disk.

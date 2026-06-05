@@ -1,92 +1,79 @@
 {
-  "title": "Matterbridge Ecovacs Plugin",
-  "description": "Bridges Ecovacs Deebot robot vacuums into Apple Home via Matter",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "matterbridge-ecovacs-yeedi",
+  "description": "Matterbridge plugin to bridge Ecovacs/Yeedi robot vacuums into Matter (Home Assistant, Apple Home, Google Home, Alexa)",
   "type": "object",
-  "required": [
-    "name",
-    "email",
-    "password",
-    "countryCode"
-  ],
+  "required": ["name", "email", "password", "countryCode"],
   "properties": {
     "name": {
       "title": "Name",
+      "description": "Name for this plugin instance",
       "type": "string",
-      "default": "Ecovacs"
+      "default": "matterbridge-ecovacs-yeedi"
     },
     "email": {
-      "title": "Ecovacs Account Email",
-      "description": "The email address of your Ecovacs account",
+      "title": "Account Email",
+      "description": "Your Yeedi or Ecovacs account email address",
       "type": "string",
       "format": "email"
     },
     "password": {
-      "title": "Ecovacs Account Password",
-      "description": "Your Ecovacs account password",
+      "title": "Account Password",
+      "description": "Your Yeedi or Ecovacs account password",
       "type": "string",
       "format": "password"
     },
     "countryCode": {
       "title": "Country Code",
-      "description": "Two-letter country code (e.g. IT, DE, US, UK)",
+      "description": "Two-letter country code for your account (e.g. US, DE, IT, UK)",
       "type": "string",
-      "default": "IT",
+      "default": "US",
       "minLength": 2,
       "maxLength": 2
     },
     "authDomain": {
-      "title": "Auth Domain (optional)",
-      "description": "Leave empty for default (ecovacs.com). Use yeedi.com for Yeedi devices.",
+      "title": "Auth Domain",
+      "description": "Use 'yeedi.com' for Yeedi robots. Leave empty for Ecovacs/Deebot.",
       "type": "string",
       "default": ""
     },
-    "whiteList": {
-      "title": "Device Whitelist",
-      "description": "List of device nicknames to include. Leave empty to include all devices.",
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "default": []
-    },
     "pollingInterval": {
       "title": "Polling Interval (seconds)",
-      "description": "How often to poll the device for status updates (0 = push only, 30-600 recommended)",
+      "description": "How often to poll the robot for status updates. Recommended: 15–60.",
       "type": "integer",
       "default": 15,
       "minimum": 0,
       "maximum": 600
     },
-    "debug": {
-      "title": "Debug Logging",
-      "description": "Enable verbose debug logging",
-      "type": "boolean",
-      "default": false
+    "whiteList": {
+      "title": "Device Whitelist",
+      "description": "List of device nicknames or IDs to include. Leave empty to include all devices.",
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
     },
     "rooms": {
       "title": "Room Configuration",
-      "description": "Customize which rooms are visible in Apple Home and their display names. Rooms not listed here will be shown with their names from the Ecovacs app.",
+      "description": "Customize which rooms are exposed and their display names. Leave empty to auto-discover.",
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "properties": {
           "id": {
             "title": "Room ID",
-            "description": "The Ecovacs internal room ID (shown in logs as 'Room loaded: ID = name')",
+            "description": "The Ecovacs/Yeedi internal room ID (visible in logs as 'Room loaded: ID = name')",
             "type": "string"
           },
           "name": {
             "title": "Custom Name",
-            "description": "Custom display name in Apple Home. Leave empty to use the Ecovacs name.",
+            "description": "Custom display name. Leave empty to use the name from the app.",
             "type": "string",
             "default": ""
           },
           "enabled": {
             "title": "Enabled",
-            "description": "Whether this room is visible in Apple Home",
+            "description": "Whether this room is exposed to Matter controllers",
             "type": "boolean",
             "default": true
           }
