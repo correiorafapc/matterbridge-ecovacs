@@ -1,6 +1,6 @@
 {
   "name": "matterbridge-ecovacs-yeedi",
-  "version": "0.1.65",
+  "version": "1.0.9",
   "description": "Matterbridge plugin to bridge Ecovacs/Yeedi robot vacuums into Matter (Home Assistant, Apple Home, Google Home, Alexa)",
   "author": "correiorafapc",
   "license": "Apache-2.0",

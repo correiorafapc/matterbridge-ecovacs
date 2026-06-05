@@ -1,5 +1,5 @@
 /**
- * matterbridge-ecovacs  v0.1.65
+ * matterbridge-ecovacs  v1.0.9
  * Fixes: os.homedir() for cross-platform token path, in-memory appVersion patch,
  * area ID collision guard, and deduplicated Error handler.
  */
