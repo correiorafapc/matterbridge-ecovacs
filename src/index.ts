@@ -1,7 +1,7 @@
 /**
- * matterbridge-ecovacs  v0.1.64
- * Improved: command handlers now return proper Matter response objects,
- * fixing InteractionModelError: Failure (0x1) in Home Assistant.
+ * matterbridge-ecovacs  v0.1.65
+ * Fixes: os.homedir() for cross-platform token path, in-memory appVersion patch,
+ * area ID collision guard, and deduplicated Error handler.
  */
 
 import { MatterbridgeDynamicPlatform, MatterbridgeEndpoint } from 'matterbridge';
@@ -12,6 +12,7 @@ import type { PlatformConfig, PlatformMatterbridge }         from 'matterbridge'
 import { createRequire }                                     from 'module';
 import * as fs                                               from 'fs';
 import * as path                                             from 'path';
+import * as os                                               from 'os';
 
 const require = createRequire(import.meta.url);
 const ecovacsDeebot = require('ecovacs-deebot') as Record<string, any>;
@@ -207,6 +208,7 @@ class EcovacsDevice {
       this.cleanState = OpState.Error;
       this.applyState();
     });
+    // Note: intentionally no second 'Error' registration — single handler covers all cases.
     this.vacbot.on('disconnect', () => {
       this.log.warn(`[${this.name}] Disconnected`);
       this.stopPolling(); this.scheduleReconnect();
@@ -266,10 +268,6 @@ class EcovacsDevice {
     this.vacbot.on('BatteryInfo', (level: number) => {
       const pct = Math.max(0, Math.min(100, Math.round(level)));
       this.endpoint?.setAttribute('PowerSource', 'batPercentRemaining', pct * 2, this.log).catch(() => undefined);
-    });
-
-    this.vacbot.on('Error', (description: string) => {
-      this.log.warn(`[${this.name}] Robot error: ${description}`);
     });
 
     this.vacbot.on('ErrorCode', (code: number) => {
@@ -361,8 +359,11 @@ class EcovacsDevice {
     }
 
     this.matterIdToEcovacsId.clear();
+    let nextFallbackId = 1000;
     const areas = entries.map(([ecoId, name]) => {
-      const matterAreaId = (parseInt(ecoId, 10) || 0) + 1;
+      const parsed = parseInt(ecoId, 10);
+      // Non-numeric IDs get a stable fallback slot above 999 to avoid collisions with numeric IDs
+      const matterAreaId = Number.isFinite(parsed) ? parsed + 1 : nextFallbackId++;
       this.matterIdToEcovacsId.set(matterAreaId, ecoId);
       return { areaId: matterAreaId, mapId: null, areaInfo: { locationInfo: { locationName: name, floorNumber: 0, areaType: null }, landmarkInfo: null } };
     });
@@ -517,23 +518,21 @@ class EcovacsPlatform extends MatterbridgeDynamicPlatform {
     const machineIdRaw = await nodeMachineId.machineId();
     const machineId = machineIdRaw.substring(0, 32);
 
-    // Patch appVersion in ecovacs-deebot to match current Ecovacs API requirements
+    // Override appVersion in-memory to match current Ecovacs API requirements.
+    // Avoids mutating the installed package file on disk.
     try {
-      const ecovacsPath = require.resolve('ecovacs-deebot');
-      let src = fs.readFileSync(ecovacsPath, 'utf8');
-      if (src.includes("appVersion = '2.2.3'")) {
-        src = src.replace("appVersion = '2.2.3'", "appVersion = '1.6.3'");
-        fs.writeFileSync(ecovacsPath, src, 'utf8');
-        this.log.info('Patched ecovacs-deebot appVersion to 1.6.3');
+      if (EcoVacsAPI.prototype.appVersion === '2.2.3' || ecovacsDeebot['appVersion'] === '2.2.3') {
+        EcoVacsAPI.prototype.appVersion = '1.6.3';
+        this.log.info('Overrode ecovacs-deebot appVersion to 1.6.3 (in-memory)');
       }
     } catch (e) {
-      this.log.warn(`Could not patch ecovacs-deebot: ${String(e)}`);
+      this.log.warn(`Could not override ecovacs-deebot appVersion: ${String(e)}`);
     }
 
     const api = new EcoVacsAPI(machineId, cfg.countryCode, cfg.authDomain ?? '');
 
     // Token cache: avoid re-authenticating on every restart (prevents rate limiting)
-    const tokenFile = path.join(process.env.HOME ?? '', '.matterbridge', 'ecovacs-token.json');
+    const tokenFile = path.join(os.homedir(), '.matterbridge', 'ecovacs-token.json');
     let tokenLoaded = false;
     try {
       const cached = JSON.parse(fs.readFileSync(tokenFile, 'utf8'));

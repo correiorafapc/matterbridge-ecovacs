@@ -10,6 +10,15 @@ This is a fork of [bubez81/matterbridge-ecovacs](https://github.com/bubez81/matt
 
 ---
 
+## What's new in v0.1.65
+
+- **Cross-platform token cache** — auth token path now uses `os.homedir()` instead of `$HOME`, fixing broken token caching on Windows.
+- **Safe appVersion override** — the Ecovacs API version is now patched in-memory instead of rewriting the installed package file on disk.
+- **Area ID collision fix** — non-numeric room IDs no longer all map to the same Matter area ID.
+- **Deduplicated error handler** — removed a duplicate `'Error'` event listener that could cause double-processing.
+
+---
+
 ## Features
 
 - **Battery** level, charging state, and voltage
@@ -57,14 +66,14 @@ matterbridge -add matterbridge-ecovacs-yeedi
 
 Configure the plugin in the Matterbridge UI, or in your Matterbridge config file.
 
-| Option            | Description                                                        | Example          |
-|-------------------|--------------------------------------------------------------------|------------------|
-| `email`           | Your Yeedi/Ecovacs account email                                   | `you@email.com`  |
-| `password`        | Your account password                                              | `********`        |
-| `countryCode`     | Two-letter country code for your account                           | `US`             |
-| `authDomain`      | `yeedi.com` for Yeedi robots, leave blank/`ecovacs.com` for Ecovacs | `yeedi.com`      |
-| `pollingInterval` | How often (seconds) to poll the robot for status                   | `15`             |
-| `rooms`           | Optional list of room/segment names for segment cleaning            | see below        |
+| Option            | Description                                                          | Example          |
+|-------------------|----------------------------------------------------------------------|------------------|
+| `email`           | Your Yeedi/Ecovacs account email                                     | `you@email.com`  |
+| `password`        | Your account password                                                | `********`       |
+| `countryCode`     | Two-letter country code for your account                             | `US`             |
+| `authDomain`      | `yeedi.com` for Yeedi robots, leave blank/`ecovacs.com` for Ecovacs  | `yeedi.com`      |
+| `pollingInterval` | How often (seconds) to poll the robot for status                     | `15`             |
+| `rooms`           | Optional list of room/segment names for segment cleaning             | see below        |
 
 > **Yeedi users:** set `authDomain` to `yeedi.com`. This is required for the
 > robot to authenticate and for map/room data to load correctly.

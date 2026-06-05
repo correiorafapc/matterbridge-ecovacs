@@ -1,8 +1,8 @@
 {
-  "name": "matterbridge-ecovacs",
-  "version": "0.1.64",
-  "description": "Matterbridge plugin to bridge Ecovacs Deebot robot vacuums into Apple Home via Matter",
-  "author": "Michele Galanti",
+  "name": "matterbridge-ecovacs-yeedi",
+  "version": "0.1.65",
+  "description": "Matterbridge plugin to bridge Ecovacs/Yeedi robot vacuums into Matter (Home Assistant, Apple Home, Google Home, Alexa)",
+  "author": "correiorafapc",
   "license": "Apache-2.0",
   "type": "module",
   "main": "dist/index.js",
@@ -45,12 +45,12 @@
   "matterbridge": {
     "type": "DynamicPlatform"
   },
-  "homepage": "https://github.com/bubez81/matterbridge-ecovacs#readme",
+  "homepage": "https://github.com/correiorafapc/matterbridge-ecovacs#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bubez81/matterbridge-ecovacs.git"
+    "url": "https://github.com/correiorafapc/matterbridge-ecovacs.git"
   },
   "bugs": {
-    "url": "https://github.com/bubez81/matterbridge-ecovacs/issues"
+    "url": "https://github.com/correiorafapc/matterbridge-ecovacs/issues"
   }
 }
