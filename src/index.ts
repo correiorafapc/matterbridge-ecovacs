@@ -1,5 +1,5 @@
 /**
- * matterbridge-ecovacs  v1.1.1
+ * matterbridge-ecovacs  v1.1.2
  * Fixes: os.homedir() for cross-platform token path, in-memory appVersion patch,
  * area ID collision guard, and deduplicated Error handler.
  */
@@ -529,7 +529,7 @@ class EcovacsPlatform extends MatterbridgeDynamicPlatform {
       this.log.warn(`Could not override ecovacs-deebot appVersion: ${String(e)}`);
     }
 
-    const api = new EcoVacsAPI(machineId, cfg.countryCode, cfg.authDomain ?? '');
+    const api = new EcoVacsAPI(machineId, cfg.countryCode, '', cfg.authDomain ?? '');
 
     // Token cache: avoid re-authenticating on every restart (prevents rate limiting)
     const tokenFile = path.join(os.homedir(), '.matterbridge', 'ecovacs-token.json');
