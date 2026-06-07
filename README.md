@@ -10,22 +10,6 @@ This is a fork of [bubez81/matterbridge-ecovacs](https://github.com/bubez81/matt
 
 ---
 
-## Changelog
-
-### v1.1.2
-- **Critical auth fix** — `authDomain` (e.g. `yeedi.com`) was being passed as the `continent` argument to `EcoVacsAPI`, causing the API URL to be built as `api-app.dc-yeedi.com.ww.ecouser.net` (invalid). Yeedi and Ecovacs authentication now works correctly.
-
-### v1.1.1
-- **Schema fix** — config fields (`email`, `password`, `countryCode`, `authDomain`, etc.) now appear in the Matterbridge plugin configuration UI.
-
-### v1.1.0
-- **Cross-platform token cache** — auth token path now uses `os.homedir()` instead of `process.env.HOME`, fixing broken token caching on Windows.
-- **Safe appVersion override** — the Ecovacs API version is now patched in-memory instead of rewriting the installed package file on disk, preventing corruption of shared npm packages.
-- **Area ID collision fix** — non-numeric room IDs no longer all collapse to the same Matter area ID; they now get stable fallback IDs starting at 1000.
-- **Deduplicated error handler** — removed a duplicate `'Error'` vacbot event listener that could cause double-processing on errors.
-
----
-
 ## Features
 
 - **Battery** level, charging state, and voltage
@@ -73,14 +57,14 @@ matterbridge -add matterbridge-ecovacs-yeedi
 
 Configure the plugin in the Matterbridge UI, or in your Matterbridge config file.
 
-| Option            | Description                                                          | Example          |
-|-------------------|----------------------------------------------------------------------|------------------|
-| `email`           | Your Yeedi/Ecovacs account email                                     | `you@email.com`  |
-| `password`        | Your account password                                                | `********`       |
-| `countryCode`     | Two-letter country code for your account                             | `US`             |
-| `authDomain`      | `yeedi.com` for Yeedi robots, leave blank/`ecovacs.com` for Ecovacs  | `yeedi.com`      |
-| `pollingInterval` | How often (seconds) to poll the robot for status                     | `15`             |
-| `rooms`           | Optional list of room/segment names for segment cleaning             | see below        |
+| Option            | Description                                                        | Example          |
+|-------------------|--------------------------------------------------------------------|------------------|
+| `email`           | Your Yeedi/Ecovacs account email                                   | `you@email.com`  |
+| `password`        | Your account password                                              | `********`        |
+| `countryCode`     | Two-letter country code for your account                           | `US`             |
+| `authDomain`      | `yeedi.com` for Yeedi robots, leave blank/`ecovacs.com` for Ecovacs | `yeedi.com`      |
+| `pollingInterval` | How often (seconds) to poll the robot for status                   | `15`             |
+| `rooms`           | Optional list of room/segment names for segment cleaning            | see below        |
 
 > **Yeedi users:** set `authDomain` to `yeedi.com`. This is required for the
 > robot to authenticate and for map/room data to load correctly.
@@ -162,6 +146,20 @@ backend, but have not all been individually verified. Reports welcome.
   one-off local file) so Matterbridge can reinstall it on container rebuilds.
 
 ---
+
+## Changelog
+
+Recent releases (see [CHANGELOG.md](CHANGELOG.md) for the full history):
+
+- **1.1.4** — Removed the spurious "Power-on behavior" dropdown on the Empty
+  Dust Bin and Clean Completed switches under Matterbridge 3.8.0.
+- **1.1.3** — Matterbridge 3.8.0 (Matter 1.5.1) compatibility. Fixes the child
+  sensors (Filter/Brush life, Empty Dust Bin, Clean Completed) disappearing
+  after the 3.8.0 update. Builds against both 3.8.0 and 3.7.10.
+- **1.0.9** — Added full README / npm page documentation.
+- **1.0.8** — Added the "Clean Completed" switch for safe daily automations.
+- **1.0.x** — Initial Yeedi support: battery, operational state, error mapping,
+  clean modes, consumable life sensors, empty dust bin, and room cleaning.
 
 ## Credits
 

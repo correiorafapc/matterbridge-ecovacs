@@ -1,7 +1,7 @@
 {
   "name": "matterbridge-ecovacs-yeedi",
-  "version": "1.1.2",
-  "description": "Matterbridge plugin to bridge Ecovacs/Yeedi robot vacuums into Matter (Home Assistant, Apple Home, Google Home, Alexa)",
+  "version": "1.1.4",
+  "description": "Matterbridge plugin to bridge Ecovacs/Yeedi robot vacuums into Matter (fork with Yeedi support and HA fixes)",
   "author": "correiorafapc",
   "license": "Apache-2.0",
   "type": "module",
@@ -19,6 +19,7 @@
     "matterbridge-plugin",
     "matter",
     "ecovacs",
+    "yeedi",
     "deebot",
     "vacuum"
   ],
@@ -31,8 +32,9 @@
   },
   "files": [
     "dist",
-    "matterbridge-ecovacs.schema.json",
-    "README.md"
+    "matterbridge-ecovacs-yeedi.schema.json",
+    "README.md",
+    "CHANGELOG.md"
   ],
   "dependencies": {
     "ecovacs-deebot": "0.9.6-beta.12",
