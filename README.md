@@ -10,12 +10,19 @@ This is a fork of [bubez81/matterbridge-ecovacs](https://github.com/bubez81/matt
 
 ---
 
-## What's new in v1.1.2
+## Changelog
 
-- **Cross-platform token cache** — auth token path now uses `os.homedir()` instead of `$HOME`, fixing broken token caching on Windows.
-- **Safe appVersion override** — the Ecovacs API version is now patched in-memory instead of rewriting the installed package file on disk.
-- **Area ID collision fix** — non-numeric room IDs no longer all map to the same Matter area ID.
-- **Deduplicated error handler** — removed a duplicate `'Error'` event listener that could cause double-processing.
+### v1.1.2
+- **Critical auth fix** — `authDomain` (e.g. `yeedi.com`) was being passed as the `continent` argument to `EcoVacsAPI`, causing the API URL to be built as `api-app.dc-yeedi.com.ww.ecouser.net` (invalid). Yeedi and Ecovacs authentication now works correctly.
+
+### v1.1.1
+- **Schema fix** — config fields (`email`, `password`, `countryCode`, `authDomain`, etc.) now appear in the Matterbridge plugin configuration UI.
+
+### v1.1.0
+- **Cross-platform token cache** — auth token path now uses `os.homedir()` instead of `process.env.HOME`, fixing broken token caching on Windows.
+- **Safe appVersion override** — the Ecovacs API version is now patched in-memory instead of rewriting the installed package file on disk, preventing corruption of shared npm packages.
+- **Area ID collision fix** — non-numeric room IDs no longer all collapse to the same Matter area ID; they now get stable fallback IDs starting at 1000.
+- **Deduplicated error handler** — removed a duplicate `'Error'` vacbot event listener that could cause double-processing on errors.
 
 ---
 
